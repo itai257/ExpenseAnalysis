@@ -1,0 +1,80 @@
+﻿@page "/creditcards"
+@using ExpenseAnalysis.UI.ViewModels
+@using ExpenseAnalysis.CLI
+@rendermode InteractiveServer
+
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<PageTitle>כרטיסי אשראי</PageTitle>
+
+
+@if (_loading)
+{
+    <MudOverlay Visible="true" DarkBackground="true" ZIndex="9999">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </MudOverlay>
+}
+else
+{
+    <MudRTLProvider RightToLeft="true">
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-5" Color="Color.Surface">
+            @foreach (TableViewModel tableVM in tablesViewModels)
+            {
+                <MudTabPanel Text="@tableVM.Title">
+                    <MudTable Items="@tableVM.Rows" Hover="true" RowClass="cursor-pointer"  SortLabel="Sort By" Elevation="0" Loading="@_loading" RowStyle="" Striped="true">
+                        <HeaderContent>
+                            @foreach (var header in @tableVM.Headers)
+                            {
+                                <MudTh Style="background: #e8e9eb"><b>@header</b></MudTh>
+                            }
+                        </HeaderContent>
+                        <RowTemplate>
+                            @foreach (var rowContent in @context)
+                            {
+                                <MudTd DataLabel="Date">@rowContent</MudTd>
+                            }
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] {50, 100}"/>
+                        </PagerContent>
+                    </MudTable>
+                </MudTabPanel>
+            }
+        </MudTabs>
+    </MudRTLProvider>
+    
+}
+@code {
+    private AggregatedRecord aggregatedRecord;
+    private List<TableViewModel>? tablesViewModels = null;
+    private bool _loading = true;
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Run(LoadWrapper);
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void LoadWrapper()
+    {
+        aggregatedRecord = new Loader().GetAggregatedRecord("C:\\Leumi-To-Program\\xlsx");
+        var tablesVMList = new List<TableViewModel>();
+        foreach (var report in aggregatedRecord.GetAllCalVisaReports())
+        {
+            tablesVMList.Add(TableViewModel.Create(report));
+        }
+
+        foreach (var report in aggregatedRecord.GetAllLeumiVisaReports())
+        {
+            tablesVMList.Add(TableViewModel.Create(report));
+        }
+
+        tablesViewModels = tablesVMList;
+    }
+
+}
