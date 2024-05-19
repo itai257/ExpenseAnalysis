@@ -1,13 +1,21 @@
-﻿using ExpenseAnalysis.CLI.Model;
+﻿using ExpenseAnalysis.Common.Model;
+using ExpenseAnalysis.Common.Model.Osh;
+using ExpenseAnalysis.Common.Model.Visa;
 using OfficeOpenXml;
+using System.Globalization;
 
 namespace ExpenseAnalysis.CLI;
 
-public class Loader
+public class DataLoader
 {
-    public AggregatedRecord GetAggregatedRecord(string reportsDirPath)
+    public MonthlyReport GetMonthlyReport(string reportsDirPath)
     {
-        var aggregatedRecord = new AggregatedRecord();
+        var monthlyReport = new MonthlyReport
+        {
+            Month = 4,
+            Year = 2024
+        };
+
         var files = Directory.GetFiles(reportsDirPath);
         foreach (var file in files)
         {
@@ -18,16 +26,18 @@ public class Loader
                 var cardSuffix = fileName.Split(".")[3];
                 Console.WriteLine($"Visa.Leumi - From: {month}, Card: {cardSuffix}");
                 var leumiVisaReport = LoadLeumiVisaExcel(file, month, cardSuffix);
-                aggregatedRecord.AddLeumiVisaReport(leumiVisaReport);
+                monthlyReport.AddVisaReport(leumiVisaReport);
             }
 
             else if (fileName.Contains("Osh", StringComparison.CurrentCultureIgnoreCase))
             {
                 var from = fileName.Split(".")[1];
                 var to = fileName.Split(".")[3];
-                Console.WriteLine($"Osh - From: {@from}, To: {to}");
-                var leumiOshReport = LoadLeumiOshExcel(file, @from, to);
-                aggregatedRecord.AddLeumiOshReport(leumiOshReport);
+                Console.WriteLine($"Osh - From: {from}, To: {to}");
+                var startDate = DateTime.ParseExact($"{fileName.Split(".")[1]}/{fileName.Split(".")[2]}/2024", "d/M/yyyy", CultureInfo.InvariantCulture);
+                var endDate = DateTime.ParseExact($"{fileName.Split(".")[4]}/{fileName.Split(".")[5]}/2024", "d/M/yyyy", CultureInfo.InvariantCulture);
+                var leumiOshReport = LoadLeumiOshExcel(file, startDate, endDate);
+                monthlyReport.SetOshReport(leumiOshReport);
             }
             else if (fileName.Contains("Visa.Cal", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -35,20 +45,20 @@ public class Loader
                 var cardSuffix = fileName.Split(".")[3];
                 Console.WriteLine($"Visa.Cal - From: {month}, Card: {cardSuffix}");
                 var calVisaReport = LoadCalVisaExcel(file, month, cardSuffix);
-                aggregatedRecord.AddCalVisaReport(calVisaReport);
+                monthlyReport.AddVisaReport(calVisaReport);
             }
         }
 
-        return aggregatedRecord;
+        return monthlyReport;
     }
 
-    public CalVisaReport LoadCalVisaExcel(string filePath, string month, string cardSuffix)
+    public VisaReport LoadCalVisaExcel(string filePath, string month, string cardSuffix)
     {
         using ExcelPackage package = new ExcelPackage(new FileInfo(filePath));
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
 
-        var reports = new List<CalVisaReportRecord>();
+        var records = new List<VisaRecord>();
         for (int i = 5; i <= worksheet.Dimension.End.Row && worksheet.Cells[i, 1] != null && !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text); i++)
         {
             DateTime date = worksheet.Cells[i, 1].GetValue<DateTime>();
@@ -56,25 +66,34 @@ public class Loader
             var dealAmount = Price.FromExcelCell(worksheet.Cells[i, 3]);
             var chargeCost = Price.FromExcelCell(worksheet.Cells[i, 4]);
             string dealKind = worksheet.Cells[i, 5].GetValue<string>();
-            string branch = worksheet.Cells[i, 6].GetValue<string>();
+            string category = worksheet.Cells[i, 6].GetValue<string>();
             string notes = worksheet.Cells[i, 7].GetValue<string>();
 
-            var report = new CalVisaReportRecord(date, businessPlaceName, dealAmount, chargeCost, dealKind, branch, notes);
-            reports.Add(report);
-            Console.WriteLine(report);
+            var record = new VisaRecord()
+            {
+                Date = date,
+                BusinessPlaceName = businessPlaceName,
+                DealAmount = dealAmount,
+                DealKind = dealKind,
+                Notes = notes,
+                Category = category,
+                ChargeCost = chargeCost
+            };
+
+            records.Add(record);
         }
 
         Console.WriteLine("Done");
-        return new CalVisaReport(reports, month, cardSuffix);
+        return new VisaReport(CardType.Cal, DateTime.ParseExact(month, "MMMM", CultureInfo.CurrentCulture).Month, int.Parse(cardSuffix), records);
     }
 
-    public LeumiVisaReport LoadLeumiVisaExcel(string filePath, string month, string cardSuffix)
+    public VisaReport LoadLeumiVisaExcel(string filePath, string month, string cardSuffix)
     {
         using ExcelPackage package = new ExcelPackage(new FileInfo(filePath));
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
 
-        List<LeumiVisaReportRecord> reports = new List<LeumiVisaReportRecord>();
+        List<VisaRecord> records = new List<VisaRecord>();
         for (int i = 12; i <= worksheet.Dimension.End.Row && worksheet.Cells[i, 1] != null && !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text); i++)
         {
             var date = worksheet.Cells[i, 1].ToDateTime();
@@ -84,22 +103,29 @@ public class Loader
             string notes = worksheet.Cells[i, 5].GetValue<string>();
             var chargeCost = Price.FromExcelCell(worksheet.Cells[i, 6]);
 
-            var report = new LeumiVisaReportRecord(date, businessPlaceName, dealAmount, dealKind, notes, chargeCost);
-            reports.Add(report);
-            Console.WriteLine(report);
+            var record = new VisaRecord()
+            {
+                Date = date,
+                BusinessPlaceName = businessPlaceName,
+                DealAmount = dealAmount,
+                DealKind = dealKind,
+                Notes = notes,
+                ChargeCost = chargeCost
+            };
+
+            records.Add(record);
         }
 
-        Console.WriteLine("Done");
-        return new LeumiVisaReport(reports, month, cardSuffix);
+        return new VisaReport(CardType.Leumi, DateTime.ParseExact(month, "MMMM", CultureInfo.CurrentCulture).Month, int.Parse(cardSuffix), records);
     }
 
-    public LeumiOshReport LoadLeumiOshExcel(string filePath, string from, string to)
+    public OshReport LoadLeumiOshExcel(string filePath, DateTime startDate, DateTime endDate)
     {
         using ExcelPackage package = new ExcelPackage(new FileInfo(filePath));
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
 
-        List<LeumiOshReportRecord> reports = new List<LeumiOshReportRecord>();
+        var reports = new List<OshRecord>();
         for (int i = 13; i <= worksheet.Dimension.End.Row && worksheet.Cells[i, 1] != null && !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text); i++)
         {
             var date = worksheet.Cells[i, 1].ToDateTime();
@@ -111,19 +137,21 @@ public class Loader
             var balance = worksheet.Cells[i, 7].GetValue<double>();
             var notes = worksheet.Cells[i, 8].GetValue<string>();
 
-            var report = new LeumiOshReportRecord(date, 
-                valueDate,
-                description,
-                referenceNumber,
-                debit,
-                credit,
-                balance,
-                notes);
-            reports.Add(report);
-            Console.WriteLine(report);
+            var record = new OshRecord()
+            {
+                Date = date,
+                ValueDate = valueDate,
+                Description = description,
+                ReferenceNumber = referenceNumber,
+                Debit = debit,
+                Credit = credit,
+                Balance = balance,
+                Notes = notes
+            };
+
+            reports.Add(record);
         }
 
-        Console.WriteLine("Done");
-        return new LeumiOshReport(reports, from, to);
+        return new OshReport(startDate, endDate, reports);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using ExpenseAnalysis.CLI.Model;
+using ExpenseAnalysis.Common.Model;
 using OfficeOpenXml;
 
 namespace ExpenseAnalysis.CLI;

@@ -2,7 +2,7 @@
 
 public class VisaRecord
 {
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; }
 
     public string BusinessPlaceName { get; set; }
     

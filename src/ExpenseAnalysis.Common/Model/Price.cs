@@ -1,10 +1,12 @@
 ﻿using System.Globalization;
+using System.Text.Json.Serialization;
 using OfficeOpenXml;
 
 namespace ExpenseAnalysis.Common.Model;
 
 public class Price
 {
+
     public double Value { get; }
 
     public Currency Currency { get; }
@@ -21,6 +23,7 @@ public class Price
         Currency = currency;
     }
 
+    [JsonConstructor]
     private Price()
     {
         Currency = Currency.None;
