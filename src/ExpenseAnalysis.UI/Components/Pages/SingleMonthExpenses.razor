@@ -1,0 +1,119 @@
+﻿@page "/monthlyexpenses/{year:int}/{month:int}"
+@using System.Text
+@using System.Text.Encodings.Web
+@using System.Text.Json
+@using AutoMapper
+@using ExpenseAnalysis.Common.Model
+@using ExpenseAnalysis.UI.ViewModels
+@using System.Linq.Expressions
+@using AutoMapper.Internal
+@inject IMapper _mapper
+@rendermode InteractiveServer
+
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<PageTitle>@Title</PageTitle>
+
+@if (_loading)
+{
+    <MudOverlay Visible="true" DarkBackground="true" ZIndex="9999">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </MudOverlay>
+}
+else
+{
+    <MudRTLProvider RightToLeft="true">
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-5" Color="Color.Surface">
+            <MudTabPanel Text="@OshReport.Title">
+                <MudTable Items="@OshReport.Records" Hover="true" RowClass="cursor-pointer" SortLabel="Sort By" Elevation="0" Loading="@_loading" RowStyle="" Striped="true">
+                    <HeaderContent>
+
+                        @foreach (var header in OshReport.Records.First().Headers)
+                        {
+                            <MudTh Style="background: #e8e9eb"><b>@header</b></MudTh>
+                        }
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Date">@context.Date</MudTd>
+                        <MudTd DataLabel="Date">@context.ValueDate</MudTd>
+                        <MudTd DataLabel="Date">@context.Description</MudTd>
+                        <MudTd DataLabel="Date">@context.ReferenceNumber</MudTd>
+                        <MudTd DataLabel="Date">@context.Debit.FormattedValue</MudTd>
+                        <MudTd DataLabel="Date">@context.Credit.FormattedValue</MudTd>
+                        <MudTd DataLabel="Date">@context.Balance</MudTd>
+                        <MudTd DataLabel="Date">@context.Notes</MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager PageSizeOptions="new int[] {50, 100}" />
+                    </PagerContent>
+                </MudTable>
+            </MudTabPanel>
+
+
+            @foreach (var visaReport in VisaReports)
+            {
+                <MudTabPanel Text="@visaReport.Title">
+                    <MudTable Items="@visaReport.Records" Hover="true" RowClass="cursor-pointer" SortLabel="Sort By" Elevation="0" Loading="@_loading" RowStyle="" Striped="true">
+                        <HeaderContent>
+                            @foreach (var header in @visaReport.Records.First().Headers)
+                            {
+                                <MudTh Style="background: #e8e9eb"><b>@header</b></MudTh>
+                            }
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Date">@context.Date</MudTd>
+                            <MudTd DataLabel="Date">@context.BusinessPlaceName</MudTd>
+                            <MudTd DataLabel="Date">@context.DealAmount.FormattedValue</MudTd>
+                            <MudTd DataLabel="Date">@context.ChargeCost.FormattedValue</MudTd>
+                            <MudTd DataLabel="Date">@context.DealKind</MudTd>
+                            <MudTd DataLabel="Date">@context.Category</MudTd>
+                            <MudTd DataLabel="Date">@context.Notes</MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] {50, 100}" />
+                        </PagerContent>
+                    </MudTable>
+                </MudTabPanel>
+            }
+        </MudTabs>
+    </MudRTLProvider>
+}
+
+@code {
+    [Parameter]
+    public int Year { get; set; }
+
+    [Parameter]
+    public int Month { get; set; }
+
+    public string Title => $"הוצאות חודשיות {Month}/{Year}";
+
+    private bool _loading = true;
+
+    public OshReportViewModel OshReport { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Run(LoadWrapper);
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void LoadWrapper()
+    {
+        var dir = Directory.GetFiles("C:\\Leumi-To-Program\\monthly_report_jsons");
+        var text = File.ReadAllText(dir[0], Encoding.GetEncoding("Windows-1255"));
+        var deserializedContent = JsonSerializer.Deserialize<MonthlyReport>(text, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+        var oshReport = deserializedContent.OshReport;
+        VisaReports = _mapper.Map<IEnumerable<VisaReportViewModel>>(deserializedContent.VisaReports);
+        OshReport = _mapper.Map<OshReportViewModel>(oshReport);
+        //monthlyExpenses.Add(new MonthlyExpenseViewModel(deserializedContent));
+    }
+
+    public IEnumerable<VisaReportViewModel> VisaReports { get; set; }
+}
+

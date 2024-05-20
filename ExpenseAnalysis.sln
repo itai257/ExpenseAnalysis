@@ -5,13 +5,13 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{748EBFBC-3812-41DA-9920-3BCBBAE01917}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalysis.Common", "src\ExpenseAnalysis.Common\ExpenseAnalysis.Common.csproj", "{D2200B0E-1160-49B6-BA0E-BBCB6186BCA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseAnalysis.Common", "src\ExpenseAnalysis.Common\ExpenseAnalysis.Common.csproj", "{D2200B0E-1160-49B6-BA0E-BBCB6186BCA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalysis.Api", "src\ExpenseAnalysis.Api\ExpenseAnalysis.Api.csproj", "{2279BABC-FC72-482A-BCD8-32564D512C7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseAnalysis.Api", "src\ExpenseAnalysis.Api\ExpenseAnalysis.Api.csproj", "{2279BABC-FC72-482A-BCD8-32564D512C7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalysis.UI", "src\ExpenseAnalysis.UI\ExpenseAnalysis.UI.csproj", "{6B225C38-9BF8-4ED3-BF5F-204F272E763F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseAnalysis.UI", "src\ExpenseAnalysis.UI\ExpenseAnalysis.UI.csproj", "{6B225C38-9BF8-4ED3-BF5F-204F272E763F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalysis.CLI", "src\ExpenseAnalysis.CLI\ExpenseAnalysis.CLI.csproj", "{462BF6C7-60C2-44D4-93C1-57F5214A1F46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseAnalysis.CLI", "src\ExpenseAnalysis.CLI\ExpenseAnalysis.CLI.csproj", "{462BF6C7-60C2-44D4-93C1-57F5214A1F46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

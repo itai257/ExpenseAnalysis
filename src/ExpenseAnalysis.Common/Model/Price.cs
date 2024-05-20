@@ -7,9 +7,9 @@ namespace ExpenseAnalysis.Common.Model;
 public class Price
 {
 
-    public double Value { get; }
+    public double Value { get; set; }
 
-    public Currency Currency { get; }
+    public Currency Currency { get; set; }
 
     public Price(double value)
     {
@@ -26,12 +26,22 @@ public class Price
     [JsonConstructor]
     private Price()
     {
-        Currency = Currency.None;
     }
 
     public override string ToString()
     {
         return $"{Value} {GetCurrencyString(Currency)}";
+    }
+
+    public string GetCurrencyString()
+    {
+        return Currency switch
+        {
+            Currency.Dollar => "$",
+            Currency.Euro => "€",
+            Currency.Shekel => "₪",
+            Currency.None => "₪"
+        };
     }
 
     private string GetCurrencyString(Currency currency)

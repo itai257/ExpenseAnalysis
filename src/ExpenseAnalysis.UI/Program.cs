@@ -1,5 +1,10 @@
 using MudBlazor.Services;
 using ExpenseAnalysis.UI.Components;
+using System.Text;
+using System.Reflection;
+
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+Console.OutputEncoding = Encoding.GetEncoding("Windows-1255");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +13,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

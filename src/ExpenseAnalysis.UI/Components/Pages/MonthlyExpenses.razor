@@ -1,23 +1,31 @@
 ﻿@page "/monthlyexpenses"
 @using System.ComponentModel
-@using System.Reflection
+@using System.Text
+@using System.Text.Encodings.Web
+@using System.Text.Json
+@using ExpenseAnalysis.Common.Model
+@using ExpenseAnalysis.UI.ViewModels
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <h3>MonthlyExpenses</h3>
 <PageTitle>@Title</PageTitle>
 
 <MudRTLProvider RightToLeft="true">
-    <MudTable Items="@monthlyExpenses" Hover="true" RowClass="cursor-pointer" SortLabel="Sort By" Elevation="0" Striped="true">
+    <MudTable Items="@monthlyExpenses" Hover="true" RowClass="cursor-pointer" SortLabel="Sort By" Elevation="0" Striped="true" T="MonthlyExpenseViewModel"  OnRowClick="OnRowClick">
         <HeaderContent>
-            @foreach (var header in monthlyExpenses.GetType().GetMembers().Select(x => x.Name))
+            @foreach (var header in monthlyExpenses.First().Headers)
             {
                 <MudTh Style="background: #e8e9eb"><b>@header</b></MudTh>
             }
         </HeaderContent>
         <RowTemplate>
-
-            <MudTd DataLabel="Date">@nameof(context.Month)</MudTd>
-
+            <MudTd DataLabel="Date">@context.Year</MudTd>
+            <MudTd DataLabel="Date">@context.Month</MudTd>
+            <MudTd DataLabel="Date">@context.TotalIncomeInShekels.FormattedValue</MudTd>
+            <MudTd DataLabel="Date">@context.TotalChargesInShekels.FormattedValue</MudTd>
+            <MudTd DataLabel="Date">@context.Difference.FormattedValue</MudTd>
+            <MudTd DataLabel="Date">@context.Notes</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] {50, 100}" />
@@ -28,71 +36,22 @@
 @code {
 
     private string Title => "הוצאות חודשיות";
-    private List<MonthlyExpense> monthlyExpenses = new();
+    private List<MonthlyExpenseViewModel> monthlyExpenses = new();
 
     protected override void OnInitialized()
     {
-        var aa = typeof(MonthlyExpense).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        monthlyExpenses.Add(new MonthlyExpense()
-            {
-                Month = "May",
-                MonthHebrew = "מאי",
-                CalVisaDebit = 12.2,
-                LeumiVisaDebit = 124.2,
-                OthersDebit = 22.5,
-                IntelSalary = 12234,
-                MorSalary = 12345,
-                OtherIncome = 1234
-            });
-
-        monthlyExpenses.Add(new MonthlyExpense()
-            {
-                Month = "May",
-                MonthHebrew = "יוני",
-                CalVisaDebit = 12.2,
-                LeumiVisaDebit = 124.2,
-                OthersDebit = 22.5,
-                IntelSalary = 12234,
-                MorSalary = 12345,
-                OtherIncome = 1234
-            });
+        var dir = Directory.GetFiles("C:\\Leumi-To-Program\\monthly_report_jsons");
+        var text = File.ReadAllText(dir[0], Encoding.GetEncoding("Windows-1255"));
+        var deserializedContent = JsonSerializer.Deserialize<MonthlyReport>(text, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+        monthlyExpenses.Add(new MonthlyExpenseViewModel(deserializedContent));
     }
 
-    private class MonthlyExpense
+
+    
+
+    private void OnRowClick(TableRowClickEventArgs<MonthlyExpenseViewModel> obj)
     {
-        [DisplayName("חודש")]
-        public string MonthHebrew { get; set; }
-
-        public string Month { get; set; }
-
-        [DisplayName("משכורת אינטל")]
-        public double IntelSalary { get; set; }
-
-        [DisplayName("משכורת מור")]
-        public double MorSalary { get; set; }
-
-        [DisplayName("הכנסות שונות")]
-        public double OtherIncome { get; set; }
-
-        [DisplayName("סהכ הכנסות")]
-        public double TotalIncome => IntelSalary + MorSalary + OtherIncome;
-
-
-        [DisplayName("הוצאות ויזה לאומי")]
-        public double LeumiVisaDebit { get; set; }
-
-
-        [DisplayName("הוצאות ויזה כאל")]
-        public double CalVisaDebit { get; set; }
-
-
-        [DisplayName("הוצאות שונות")]
-        public double OthersDebit { get; set; }
-
-        [DisplayName("סהכ הוצאות")]
-        public double TotalDebit => LeumiVisaDebit + CalVisaDebit + OthersDebit;
-
-        [DisplayName("מאזן")]
-        public double Balance => TotalIncome - TotalDebit;
+        Console.WriteLine(JsonSerializer.Serialize(obj.Item));
+        Navigation.NavigateTo($"/monthlyexpenses/{obj.Item.Year}/{obj.Item.Month}");
     }
 }

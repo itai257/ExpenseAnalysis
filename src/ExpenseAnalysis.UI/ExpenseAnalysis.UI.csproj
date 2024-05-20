@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,12 +8,13 @@
 
   
   <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="6.*" />
+    <PackageReference Include="MudBlazor" Version="6.19.1" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
   
   <ItemGroup>
-    <ProjectReference Include="..\ExpenseAnalysis.CLI\ExpenseAnalysis.CLI.csproj" />
+    <ProjectReference Include="..\ExpenseAnalysis.Common\ExpenseAnalysis.Common.csproj" />
   </ItemGroup>
   
 </Project>

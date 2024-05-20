@@ -57,7 +57,7 @@ public class MonthlyReportSummaryDto : IMapFrom<MonthlyReport>
 
     public double TotalChargesInShekels { get; set; }
 
-    public double BalanceInShekels { get; set; }
+    public double Difference { get; set; }
 
     public string Notes { get; set; }
 }

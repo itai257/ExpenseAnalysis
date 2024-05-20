@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace ExpenseAnalysis.Common.Model.Visa;
 
@@ -23,15 +24,20 @@ public class VisaReport
         Records = new List<VisaRecord>(records);
     }
 
+    [DisplayName("סוג כרטיס")]
     public CardType CardType { get; set; }
 
+    [DisplayName("חודש")]
     public int Month { get; set; }
 
+    [DisplayName("שנה")]
     public int Year { get; set; }
 
+    [DisplayName("4 ספרות אחרונות")]
     public int LastDigits { get; set; }
 
-    public List<VisaRecord> Records {get; set; }
+    public List<VisaRecord> Records { get; set; }
 
+    [DisplayName("סהכ חיוב")]
     public double TotalCharge => Records.Sum(x => x.ChargeCost.Value);
 }
