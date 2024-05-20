@@ -43,11 +43,11 @@ public class OshReportViewModel : IHaveMapping
 public class OshRecordViewModel : IHaveMapping
 {
     [DisplayName("תאריך")]
-    public string Date { get; set; }
+    public DateTimeViewModel Date { get; set; }
 
     [DisplayName("תאריך ערך")]
-    public string ValueDate { get; set; }
-    
+    public DateTimeViewModel ValueDate { get; set; }
+
     [DisplayName("תיאור")]
     public string Description { get; set; }
 
@@ -67,26 +67,25 @@ public class OshRecordViewModel : IHaveMapping
     public string Notes { get; set; }
 
 
-    public List<string> Headers => new()
+    public Dictionary<string, Func<OshRecordViewModel, object>> Headers => new()
     {
-        GetType().GetDisplayName(nameof(Date)),
-        GetType().GetDisplayName(nameof(ValueDate)),
-        GetType().GetDisplayName(nameof(Description)),
-        GetType().GetDisplayName(nameof(ReferenceNumber)),
-        GetType().GetDisplayName(nameof(Debit)),
-        GetType().GetDisplayName(nameof(Credit)),
-        GetType().GetDisplayName(nameof(Balance)),
-        GetType().GetDisplayName(nameof(Notes))
+        {GetType().GetDisplayName(nameof(Date)), x=>x.Date.DateTime},
+        {GetType().GetDisplayName(nameof(ValueDate)),x=>x.ValueDate.DateTime},
+        {GetType().GetDisplayName(nameof(Description)),x=>x.Description},
+        {GetType().GetDisplayName(nameof(ReferenceNumber)),x=>x.ReferenceNumber},
+        {GetType().GetDisplayName(nameof(Debit)),x=>x.Debit},
+        {GetType().GetDisplayName(nameof(Credit)),x=>x.Credit},
+        {GetType().GetDisplayName(nameof(Balance)),x=>x.Balance},
+        {GetType().GetDisplayName(nameof(Notes)), x=>x.Notes}
     };
 
     public void CreateMap(Profile profile)
     {
         profile.CreateMap<OshRecord, OshRecordViewModel>()
             .ForMember(dest => dest.Date,
-                opt => opt.MapFrom(src => src.Date.HasValue == false ? "" : src.Date.Value.ToString("dd/MM/yyyy")))
+                opt => opt.MapFrom(src => new DateTimeViewModel(src.Date.Value)))
             .ForMember(dest => dest.ValueDate,
-                opt => opt.MapFrom(src =>
-                    src.ValueDate.HasValue == false ? "" : src.ValueDate.Value.ToString("dd/MM/yyyy")))
+                opt => opt.MapFrom(src => new DateTimeViewModel(src.ValueDate.Value)))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.ReferenceNumber, opt => opt.MapFrom(src => src.ReferenceNumber))
             .ForMember(dest => dest.Debit, opt => opt.MapFrom(src => new MoneyViewModel(src.Debit)))
@@ -94,4 +93,17 @@ public class OshRecordViewModel : IHaveMapping
             .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance.ToString("N")))
             .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes));
     }
+}
+
+public class DateTimeViewModel
+{
+    public DateTime DateTime { get; }
+
+    public DateTimeViewModel(DateTime dateTime)
+    {
+        DateTime = dateTime;
+        FormattedString = dateTime.ToString("dd/MM/yyyy");
+    }
+
+    public string FormattedString { get; }
 }

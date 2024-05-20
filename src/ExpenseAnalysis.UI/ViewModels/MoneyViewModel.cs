@@ -7,13 +7,13 @@ public class MoneyViewModel
     public MoneyViewModel(double value)
     {
         NumericValue = value;
-        FormattedValue = string.Format($"{NumericValue:N}");
+        FormattedValue = value == 0? "" : string.Format($"{NumericValue:N}");
     }
 
     public MoneyViewModel(Price price)
     {
         NumericValue = price.Value;
-        FormattedValue = string.Format($"{NumericValue:N} {price.GetCurrencyString()}");
+        FormattedValue = price.Value == 0 ? "" : string.Format($"{NumericValue:N} {price.GetCurrencyString()}");
     }
 
     public double NumericValue { get; set; }

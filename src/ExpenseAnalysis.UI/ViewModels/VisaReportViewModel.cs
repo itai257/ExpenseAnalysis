@@ -43,19 +43,19 @@ public class VisaReportViewModel : IHaveMapping
 
 public class VisaRecordViewModel : IHaveMapping
 {
-    public List<string> Headers => new()
+    public Dictionary<string, Func<VisaRecordViewModel, object>> Headers => new()
     {
-        GetType().GetDisplayName(nameof(Date)),
-        GetType().GetDisplayName(nameof(BusinessPlaceName)),
-        GetType().GetDisplayName(nameof(DealAmount)),
-        GetType().GetDisplayName(nameof(ChargeCost)),
-        GetType().GetDisplayName(nameof(DealKind)),
-        GetType().GetDisplayName(nameof(Category)),
-        GetType().GetDisplayName(nameof(Notes))
+        {GetType().GetDisplayName(nameof(Date)), x => x.Date.DateTime},
+        {GetType().GetDisplayName(nameof(BusinessPlaceName)), x => x.BusinessPlaceName},
+        {GetType().GetDisplayName(nameof(DealAmount)), x => x.DealAmount.NumericValue},
+        {GetType().GetDisplayName(nameof(ChargeCost)), x => x.ChargeCost.NumericValue},
+        {GetType().GetDisplayName(nameof(DealKind)), x => x.DealKind},
+        {GetType().GetDisplayName(nameof(Category)), x => x.Category},
+        {GetType().GetDisplayName(nameof(Notes)), x => x.Notes}
     };
 
     [DisplayName("תאריך")]
-    public string Date { get; set; }
+    public DateTimeViewModel Date { get; set; }
 
     [DisplayName("בית עסק")]
     public string BusinessPlaceName { get; set; }
@@ -79,7 +79,7 @@ public class VisaRecordViewModel : IHaveMapping
     {
         profile.CreateMap<VisaRecord, VisaRecordViewModel>()
             .ForMember(dest => dest.Date,
-                opt => opt.MapFrom(src => src.Date.HasValue == false ? "" : src.Date.Value.ToString("dd/MM/yyyy")))
+                opt => opt.MapFrom(src => new DateTimeViewModel(src.Date.Value)))
             .ForMember(dest => dest.BusinessPlaceName, opt => opt.MapFrom(src => src.BusinessPlaceName))
             .ForMember(dest => dest.DealAmount, opt => opt.MapFrom(src => new MoneyViewModel(src.DealAmount)))
             .ForMember(dest => dest.ChargeCost, opt => opt.MapFrom(src => new MoneyViewModel(src.ChargeCost)))

@@ -16,7 +16,7 @@ public static class ExcelRangeExtensions
         
         try
         {
-            date = worksheetCell.GetValue<DateTime>();
+            date = DateTime.ParseExact(worksheetCell.GetValue<string>(), "d/M/y", CultureInfo.InvariantCulture);
             
             return date;
         }

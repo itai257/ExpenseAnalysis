@@ -8,11 +8,11 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<h3>MonthlyExpenses</h3>
+<h3>@Title</h3><br/>
 <PageTitle>@Title</PageTitle>
 
 <MudRTLProvider RightToLeft="true">
-    <MudTable Items="@monthlyExpenses" Hover="true" RowClass="cursor-pointer" SortLabel="Sort By" Elevation="0" Striped="true" T="MonthlyExpenseViewModel"  OnRowClick="OnRowClick">
+    <MudTable Items="@monthlyExpenses" Bordered="true" Hover="true" RowClass="cursor-pointer" SortLabel="Sort By" Elevation="0" Striped="true" T="MonthlyExpenseViewModel"  OnRowClick="OnRowClick">
         <HeaderContent>
             @foreach (var header in monthlyExpenses.First().Headers)
             {
@@ -22,9 +22,9 @@
         <RowTemplate>
             <MudTd DataLabel="Date">@context.Year</MudTd>
             <MudTd DataLabel="Date">@context.Month</MudTd>
-            <MudTd DataLabel="Date">@context.TotalIncomeInShekels.FormattedValue</MudTd>
-            <MudTd DataLabel="Date">@context.TotalChargesInShekels.FormattedValue</MudTd>
-            <MudTd DataLabel="Date">@context.Difference.FormattedValue</MudTd>
+            <MudTd DataLabel="Date" Style="background: lightgreen">@context.TotalIncomeInShekels.FormattedValue</MudTd>
+            <MudTd DataLabel="Date" Style="background: lightcoral">@context.TotalChargesInShekels.FormattedValue</MudTd>
+            <MudTd DataLabel="Date" Style="@(GetStyle(context.Difference))">@context.Difference.FormattedValue</MudTd>
             <MudTd DataLabel="Date">@context.Notes</MudTd>
         </RowTemplate>
         <PagerContent>
@@ -54,4 +54,10 @@
         Console.WriteLine(JsonSerializer.Serialize(obj.Item));
         Navigation.NavigateTo($"/monthlyexpenses/{obj.Item.Year}/{obj.Item.Month}");
     }
+
+    private string? GetStyle(MoneyViewModel diff)
+    {
+        return diff.IsPositive ? "background: lightgreen;" : "background: lightcoral";
+    }
+
 }

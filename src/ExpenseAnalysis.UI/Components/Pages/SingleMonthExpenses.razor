@@ -31,16 +31,16 @@ else
 
                         @foreach (var header in OshReport.Records.First().Headers)
                         {
-                            <MudTh Style="background: #e8e9eb"><b>@header</b></MudTh>
+                            <MudTh Style="background: #e8e9eb"><MudTableSortLabel SortBy="@header.Value"><b>@header.Key</b></MudTableSortLabel></MudTh>
                         }
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Date">@context.Date</MudTd>
-                        <MudTd DataLabel="Date">@context.ValueDate</MudTd>
+                        <MudTd DataLabel="Date">@context.Date.FormattedString</MudTd>
+                        <MudTd DataLabel="Date">@context.ValueDate.FormattedString</MudTd>
                         <MudTd DataLabel="Date">@context.Description</MudTd>
                         <MudTd DataLabel="Date">@context.ReferenceNumber</MudTd>
-                        <MudTd DataLabel="Date">@context.Debit.FormattedValue</MudTd>
-                        <MudTd DataLabel="Date">@context.Credit.FormattedValue</MudTd>
+                        <MudTd DataLabel="Date" Style="@(!context.Debit.IsZero?" background: lightcoral;": string.Empty)">@context.Debit.FormattedValue</MudTd>
+                        <MudTd DataLabel="Date" Style="@(!context.Credit.IsZero?" background: lightgreen;": string.Empty)">@context.Credit.FormattedValue</MudTd>
                         <MudTd DataLabel="Date">@context.Balance</MudTd>
                         <MudTd DataLabel="Date">@context.Notes</MudTd>
                     </RowTemplate>
@@ -58,14 +58,14 @@ else
                         <HeaderContent>
                             @foreach (var header in @visaReport.Records.First().Headers)
                             {
-                                <MudTh Style="background: #e8e9eb"><b>@header</b></MudTh>
+                                <MudTh Style="background: #e8e9eb"><MudTableSortLabel SortBy="@header.Value"><b>@header.Key</b></MudTableSortLabel></MudTh>
                             }
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="Date">@context.Date</MudTd>
+                            <MudTd DataLabel="Date">@context.Date.FormattedString</MudTd>
                             <MudTd DataLabel="Date">@context.BusinessPlaceName</MudTd>
                             <MudTd DataLabel="Date">@context.DealAmount.FormattedValue</MudTd>
-                            <MudTd DataLabel="Date">@context.ChargeCost.FormattedValue</MudTd>
+                            <MudTd DataLabel="Date" Style="@(GetStyleForCharge(context.ChargeCost))">@context.ChargeCost.FormattedValue</MudTd>
                             <MudTd DataLabel="Date">@context.DealKind</MudTd>
                             <MudTd DataLabel="Date">@context.Category</MudTd>
                             <MudTd DataLabel="Date">@context.Notes</MudTd>
@@ -115,5 +115,21 @@ else
     }
 
     public IEnumerable<VisaReportViewModel> VisaReports { get; set; }
+
+    private string? GetStyleForCharge(MoneyViewModel contextChargeCost)
+    {
+        if (contextChargeCost.IsNegative)
+        {
+            return "Background: lightgreen;";
+        }
+
+        if (contextChargeCost.IsPositive)
+        {
+            return "Background: lightcoral;";
+        }
+
+        return "";
+    }
+
 }
 
