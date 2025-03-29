@@ -11,18 +11,16 @@ public class ApplicationDbContext : DbContext
     {
     }
     
-    public DbSet<ExpenseTypeClass> ExpenseTypeClasses { get; set; }
-    
-    public DbSet<CalCardExpenseRecord> CalCardExpenseRecords { get; set; }
-    
-    public DbSet<LeumiVisaCardExpenseRecord> LeumiVisaCardExpenseRecords { get; set; }
-    
-    public DbSet<OshExpenseRecord> OshExpenseRecords { get; set; }
+    // Entity collections
+    public DbSet<ExpenseTypeClass> ExpenseTypeClasses { get; set; } = null!;
+    public DbSet<CalCardExpenseRecord> CalCardExpenseRecords { get; set; } = null!;
+    public DbSet<LeumiVisaCardExpenseRecord> LeumiVisaCardExpenseRecords { get; set; } = null!;
+    public DbSet<OshExpenseRecord> OshExpenseRecords { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
-        // Configure entity relationships, indexes, etc. here
+        // Using data annotations in entity classes instead of Fluent API
     }
 }
