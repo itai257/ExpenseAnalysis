@@ -1,6 +1,6 @@
 namespace ExpenseAnalysis.Api.Entities.ExpenseRecord;
 
-public class CalBaseCardExpenseRecord : BaseCardExpenseRecord
+public class CalCardExpenseRecord : BaseCardExpenseRecord
 {
     /// <summary>
     /// The branch or industry (corresponds to "ענף").

@@ -1,6 +1,6 @@
 namespace ExpenseAnalysis.Api.Entities.ExpenseRecord;
 
-public class LeumiVisaBaseCardExpenseRecord : BaseCardExpenseRecord
+public class LeumiVisaCardExpenseRecord : BaseCardExpenseRecord
 {
     /// <summary>
     /// Additional details (corresponds to "פרטים").
