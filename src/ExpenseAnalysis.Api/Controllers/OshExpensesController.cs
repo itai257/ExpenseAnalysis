@@ -1,7 +1,7 @@
-using ExpenseAnalysis.Api.Dtos;
 using ExpenseAnalysis.Api.Features.OshExpenses.Commands;
 using ExpenseAnalysis.Api.Features.OshExpenses.Queries;
 using ExpenseAnalysis.Api.Features.OshExpenses.Requests;
+using ExpenseAnalysis.Common.Api.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 

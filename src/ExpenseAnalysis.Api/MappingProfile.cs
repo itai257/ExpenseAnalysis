@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using System.Reflection;
+using ExpenseAnalysis.Api.Entities;
+using ExpenseAnalysis.Api.Entities.ExpenseRecord;
+using ExpenseAnalysis.Common.Api.Dtos;
 
 namespace ExpenseAnalysis.Api;
 
@@ -22,6 +25,16 @@ public class MappingProfile : Profile
 
             methodInfo?.Invoke(instance, new object[] { this });
         }
+        
+        ManuallyCreateMaps<CalCardExpenseRecord, CalCardExpenseRecordDto>();
+        ManuallyCreateMaps<ExpenseTypeClass, ExpenseTypeClassDto>();
+        ManuallyCreateMaps<LeumiVisaCardExpenseRecord, LeumiVisaCardExpenseRecordDto>();
+        ManuallyCreateMaps<OshExpenseRecord, OshExpenseRecordDto>();
+    }
+
+    private void ManuallyCreateMaps<FromT,ToT>()
+    {
+        CreateMap(typeof(FromT), typeof(ToT)).ReverseMap();
     }
 }
 

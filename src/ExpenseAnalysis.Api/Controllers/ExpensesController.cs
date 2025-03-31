@@ -1,7 +1,7 @@
 using AutoMapper.QueryableExtensions;
-using ExpenseAnalysis.Api.Dtos;
 using ExpenseAnalysis.Api.Features.ExpensesTypes.Commands;
 using ExpenseAnalysis.Api.Features.ExpensesTypes.Queries;
+using ExpenseAnalysis.Common.Api.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 

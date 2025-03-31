@@ -1,7 +1,7 @@
-using ExpenseAnalysis.Api.Dtos;
 using ExpenseAnalysis.Api.Features.LeumiVisaCardExpenses.Commands;
 using ExpenseAnalysis.Api.Features.LeumiVisaCardExpenses.Queries;
 using ExpenseAnalysis.Api.Features.LeumiVisaCardExpenses.Requests;
+using ExpenseAnalysis.Common.Api.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 

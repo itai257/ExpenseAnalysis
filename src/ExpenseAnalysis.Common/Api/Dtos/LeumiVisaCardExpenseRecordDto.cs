@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using ExpenseAnalysis.Api.Entities.ExpenseRecord;
 
-namespace ExpenseAnalysis.Api.Dtos;
+namespace ExpenseAnalysis.Common.Api.Dtos;
 
-public class CalCardExpenseRecordDto : IMapFrom<CalCardExpenseRecord>
+public class LeumiVisaCardExpenseRecordDto
 {
     public int Id { get; set; }
     
@@ -25,6 +24,6 @@ public class CalCardExpenseRecordDto : IMapFrom<CalCardExpenseRecord>
     
     public ExpenseTypeClassDto? TypeClass { get; set; }
     
-    [StringLength(100)]
-    public string Branch { get; set; } = string.Empty;
+    [StringLength(500)]
+    public string Details { get; set; } = string.Empty;
 } 

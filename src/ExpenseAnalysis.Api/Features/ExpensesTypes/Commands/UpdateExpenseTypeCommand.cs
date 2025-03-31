@@ -1,6 +1,6 @@
 using AutoMapper;
-using ExpenseAnalysis.Api.Dtos;
 using ExpenseAnalysis.Api.Infrastructure;
+using ExpenseAnalysis.Common.Api.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

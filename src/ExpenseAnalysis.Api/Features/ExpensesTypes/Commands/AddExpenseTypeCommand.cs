@@ -1,7 +1,7 @@
 using AutoMapper;
-using ExpenseAnalysis.Api.Dtos;
 using ExpenseAnalysis.Api.Entities;
 using ExpenseAnalysis.Api.Infrastructure;
+using ExpenseAnalysis.Common.Api.Dtos;
 using MediatR;
 
 namespace ExpenseAnalysis.Api.Features.ExpensesTypes.Commands;

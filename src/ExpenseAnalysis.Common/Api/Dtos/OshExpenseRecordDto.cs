@@ -1,10 +1,6 @@
-using AutoMapper;
-using ExpenseAnalysis.Api.Entities;
-using ExpenseAnalysis.Api.Entities.ExpenseRecord;
+namespace ExpenseAnalysis.Common.Api.Dtos;
 
-namespace ExpenseAnalysis.Api.Dtos;
-
-public class OshExpenseRecordDto : IMapFrom<OshExpenseRecord>
+public class OshExpenseRecordDto
 {
     public int Id { get; set; }
     public DateTime Date { get; set; }

@@ -1,8 +1,8 @@
 using AutoMapper;
-using ExpenseAnalysis.Api.Dtos;
 using ExpenseAnalysis.Api.Entities.ExpenseRecord;
 using ExpenseAnalysis.Api.Features.LeumiVisaCardExpenses.Requests;
 using ExpenseAnalysis.Api.Infrastructure;
+using ExpenseAnalysis.Common.Api.Dtos;
 using MediatR;
 
 namespace ExpenseAnalysis.Api.Features.LeumiVisaCardExpenses.Commands;
