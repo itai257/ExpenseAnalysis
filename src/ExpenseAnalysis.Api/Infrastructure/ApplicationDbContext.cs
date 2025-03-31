@@ -13,8 +13,11 @@ public class ApplicationDbContext : DbContext
     
     // Entity collections
     public DbSet<ExpenseTypeClass> ExpenseTypeClasses { get; set; } = null!;
+    
     public DbSet<CalCardExpenseRecord> CalCardExpenseRecords { get; set; } = null!;
+    
     public DbSet<LeumiVisaCardExpenseRecord> LeumiVisaCardExpenseRecords { get; set; } = null!;
+    
     public DbSet<OshExpenseRecord> OshExpenseRecords { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

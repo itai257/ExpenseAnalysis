@@ -55,5 +55,5 @@ public abstract class BaseCardExpenseRecord
     
     // Navigation property with ForeignKey attribute
     [ForeignKey("TypeClassId")]
-    public virtual ExpenseTypeClass? TypeClass { get; set; }
+    public ExpenseTypeClass? TypeClass { get; set; }
 }
