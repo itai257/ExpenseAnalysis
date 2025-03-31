@@ -4,7 +4,7 @@ using ExpenseAnalysis.Api.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpenseAnalysis.Api.Features.Commands;
+namespace ExpenseAnalysis.Api.Features.ExpensesTypes.Commands;
 
 public class UpdateExpenseTypeCommand : IRequest<ExpenseTypeClassDto>
 {

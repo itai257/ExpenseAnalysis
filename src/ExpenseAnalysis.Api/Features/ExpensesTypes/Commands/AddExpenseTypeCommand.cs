@@ -4,7 +4,7 @@ using ExpenseAnalysis.Api.Entities;
 using ExpenseAnalysis.Api.Infrastructure;
 using MediatR;
 
-namespace ExpenseAnalysis.Api.Features.Commands;
+namespace ExpenseAnalysis.Api.Features.ExpensesTypes.Commands;
 
 public class AddExpenseTypeCommand : IRequest<ExpenseTypeClassDto>
 {

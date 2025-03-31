@@ -4,7 +4,7 @@ using ExpenseAnalysis.Api.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpenseAnalysis.Api.Features.Queries;
+namespace ExpenseAnalysis.Api.Features.ExpensesTypes.Queries;
 
 public class GetAllExpensesTypesQuery : IRequest<List<ExpenseTypeClassDto>>
 {
