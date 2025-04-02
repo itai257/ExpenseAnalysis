@@ -14,7 +14,10 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
+builder.Services.AddHttpClient("ExpenseAnalysisApi", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5094");
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

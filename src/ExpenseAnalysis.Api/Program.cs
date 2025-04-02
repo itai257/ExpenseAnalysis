@@ -12,6 +12,17 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 builder.Services.AddControllers();
 
+// Add CORS configuration
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:5259", "https://localhost:7106")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 // Register DbContext for Entity Framework
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
@@ -35,6 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(); // Add CORS middleware
 app.UseAuthorization();
 app.MapControllers();
 app.RegisterEndpoints();
