@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseAnalysis.UI", "src\E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseAnalysis.CLI", "src\ExpenseAnalysis.CLI\ExpenseAnalysis.CLI.csproj", "{462BF6C7-60C2-44D4-93C1-57F5214A1F46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalysis.Client", "src\ExpenseAnalysis.Client\ExpenseAnalysis.Client.csproj", "{867539BC-67E5-40AA-B7F4-42CCFB145697}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{462BF6C7-60C2-44D4-93C1-57F5214A1F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{462BF6C7-60C2-44D4-93C1-57F5214A1F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{462BF6C7-60C2-44D4-93C1-57F5214A1F46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{867539BC-67E5-40AA-B7F4-42CCFB145697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{867539BC-67E5-40AA-B7F4-42CCFB145697}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{867539BC-67E5-40AA-B7F4-42CCFB145697}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{867539BC-67E5-40AA-B7F4-42CCFB145697}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{2279BABC-FC72-482A-BCD8-32564D512C7B} = {748EBFBC-3812-41DA-9920-3BCBBAE01917}
 		{6B225C38-9BF8-4ED3-BF5F-204F272E763F} = {748EBFBC-3812-41DA-9920-3BCBBAE01917}
 		{462BF6C7-60C2-44D4-93C1-57F5214A1F46} = {748EBFBC-3812-41DA-9920-3BCBBAE01917}
+		{867539BC-67E5-40AA-B7F4-42CCFB145697} = {748EBFBC-3812-41DA-9920-3BCBBAE01917}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F98CFCF7-6067-4D5B-917C-A681E4839B5F}

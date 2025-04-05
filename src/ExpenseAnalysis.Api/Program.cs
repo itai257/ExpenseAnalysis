@@ -17,15 +17,15 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5259", "https://localhost:7106")
-               .AllowAnyHeader()
-               .AllowAnyMethod();
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
 
 // Register DbContext for Entity Framework
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.ConfigureModules();
 var app = builder.Build();
@@ -36,6 +36,7 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
+    
 }
 
 // Configure the HTTP request pipeline.

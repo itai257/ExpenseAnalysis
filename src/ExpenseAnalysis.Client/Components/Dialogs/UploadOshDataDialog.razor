@@ -1,0 +1,58 @@
+@inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+
+<MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+    <ActivatorContent>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.CloudUpload">
+            Upload Files
+        </MudButton>
+    </ActivatorContent>
+</MudFileUpload>
+
+@code
+{
+    private HttpClient Http;
+    private IList<IBrowserFile> _files = new List<IBrowserFile>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Http = HttpClientFactory.CreateClient("ExpenseAnalysisApi");
+    }
+    
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        _files.Add(file);
+        await UploadToServer(file);
+        // TODO: Upload the file to the server
+    }
+    
+    private async Task UploadToServer(IBrowserFile file)
+    {
+        try
+        {
+            var content = new MultipartFormDataContent();
+            var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // Max 10 MB
+            var fileContent = new StreamContent(stream);
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/OshExpenses/upload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add($"Uploaded {file.Name} successfully!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add($"Error uploading {file.Name}: {response.ReasonPhrase}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Exception: {ex.Message}", Severity.Error);
+        }
+    }
+}

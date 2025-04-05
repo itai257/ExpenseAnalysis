@@ -1,0 +1,132 @@
+@page "/expense-types"
+@using ExpenseAnalysis.Client.ViewModels
+@using AutoMapper
+@using ExpenseAnalysis.Common.Api.Dtos
+@using System.ComponentModel.DataAnnotations
+@inject IHttpClientFactory HttpClientFactory
+@inject IMapper Mapper
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">ניהול סוגי הוצאות</MudText>
+
+    <MudCard>
+        <MudCardContent>
+            <EditForm Model="@newExpenseType" OnValidSubmit="AddExpenseType" FormName="new-expense">
+                
+                <ValidationSummary />
+                <MudGrid>
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="newExpenseType.Name"
+                                    Label="@(typeof(ExpenseTypeViewModel).GetDisplayName(nameof(ExpenseTypeViewModel.Name)))"
+                                    For="@(() => newExpenseType.Name)"
+                                    Required="true"
+                                    RequiredError="שם סוג ההוצאה הוא חובה"
+                                    Immediate="true" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6" Class="d-flex align-center">
+                        <MudButton ButtonType="ButtonType.Submit"
+                                 Variant="Variant.Filled" 
+                                 Color="Color.Primary" >
+                            הוסף סוג הוצאה
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </MudCardContent>
+    </MudCard>
+
+    <MudCard Class="mt-4">
+        <MudCardContent>
+            <MudTable Items="@expenseTypes" Hover="true" Striped="true" Dense="true">
+                <HeaderContent>
+                    <MudTh>@(typeof(ExpenseTypeViewModel).GetDisplayName(nameof(ExpenseTypeViewModel.Name)))</MudTh>
+                    <MudTh>פעולות</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Name</MudTd>
+                    <MudTd>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@(() => EditExpenseType(context))" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteExpenseType(context))" />
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+@code {
+    private ExpenseTypeViewModel newExpenseType = new();
+    private List<ExpenseTypeViewModel> expenseTypes = new();
+    private ExpenseTypeViewModel editingExpenseType;
+    private HttpClient Http;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Http = HttpClientFactory.CreateClient("ExpenseAnalysisApi");
+        await LoadExpenseTypes();
+    }
+
+    private async Task AddExpenseType()
+    {
+        try
+        {
+            var dto = Mapper.Map<ExpenseTypeClassDto>(newExpenseType);
+            var response = await Http.PostAsJsonAsync("api/Expenses/Types", dto);
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("סוג ההוצאה נוסף בהצלחה", Severity.Success);
+                newExpenseType = new ExpenseTypeViewModel();
+                await LoadExpenseTypes();
+            }
+            else
+            {
+                Snackbar.Add("שגיאה בהוספת סוג ההוצאה", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("שגיאה בהוספת סוג ההוצאה", Severity.Error);
+        }
+    }
+
+    private async Task LoadExpenseTypes()
+    {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<ExpenseTypeClassDto>>("api/Expenses/Types");
+            expenseTypes = Mapper.Map<List<ExpenseTypeViewModel>>(response);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("שגיאה בטעינת סוגי ההוצאות", Severity.Error);
+        }
+    }
+
+    private void EditExpenseType(ExpenseTypeViewModel expenseType)
+    {
+        editingExpenseType = expenseType;
+        newExpenseType = new ExpenseTypeViewModel { Name = expenseType.Name };
+    }
+
+    private async Task DeleteExpenseType(ExpenseTypeViewModel expenseType)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync($"api/Expenses/Types/{expenseType.Name}");
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("סוג ההוצאה נמחק בהצלחה", Severity.Success);
+                await LoadExpenseTypes();
+            }
+            else
+            {
+                Snackbar.Add("שגיאה במחיקת סוג ההוצאה", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("שגיאה במחיקת סוג ההוצאה", Severity.Error);
+        }
+    }
+} 

@@ -20,10 +20,18 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<OshExpenseRecord> OshExpenseRecords { get; set; } = null!;
     
+    public DbSet<OshExpenseReport> OshExpenseReports { get; set; } = null!;
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<OshExpenseRecord>()
+            .Property(x => x.Date)
+            .HasColumnType("timestamp without time zone");
         
+        modelBuilder.Entity<OshExpenseRecord>()
+            .Property(x => x.ValueDate)
+            .HasColumnType("timestamp without time zone");
         // Using data annotations in entity classes instead of Fluent API
     }
 }

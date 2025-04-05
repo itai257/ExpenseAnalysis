@@ -30,13 +30,13 @@ public abstract class BaseCardExpenseRecord
     /// The amount of the transaction (e.g. "סכום עסקה" or "סכום העסקה").
     /// </summary>
     [Column(TypeName = "decimal(18,2)")]
-    public decimal? TransactionAmount { get; set; }
+    public Money? TransactionAmount { get; set; }
 
     /// <summary>
     /// The charged amount (e.g. "סכום חיוב").
     /// </summary>
     [Column(TypeName = "decimal(18,2)")]
-    public decimal? ChargeAmount { get; set; }
+    public Money? ChargeAmount { get; set; }
 
     /// <summary>
     /// The type of transaction (e.g. "סוג עסקה").

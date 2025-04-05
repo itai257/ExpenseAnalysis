@@ -31,8 +31,22 @@
     </MudLink>
 </MudAlert>
 
-@code {
+<MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               StartIcon="@Icons.Material.Filled.CloudUpload">
+        Upload Files
+    </MudButton>
+</MudFileUpload>
 
+@code {
+    IList<IBrowserFile> _files = new List<IBrowserFile>();
+    private void UploadFiles(IBrowserFile file)
+    {
+        _files.Add(file);
+        //TODO upload the files to the server
+    }
+    
     private Task OpenExpensesTypeDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, BackdropClick = true};

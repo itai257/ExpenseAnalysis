@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace ExpenseAnalysis.Api.Entities.ExpenseRecord;
 
@@ -16,13 +18,15 @@ public class OshExpenseRecord
     /// For Osh, this is the primary transaction date.
     /// </summary>
     [Required]
-    public DateTime Date { get; set; }
+    [Column(TypeName = "timestamp without time zone")] 
+    public DateTime? Date { get; set; }
     
     /// <summary>
     /// The value date (corresponds to "תאריך ערך").
     /// </summary>
     [Required]
-    public DateTime ValueDate { get; set; }
+    [Column(TypeName = "timestamp without time zone")] 
+    public DateTime? ValueDate { get; set; }
 
     /// <summary>
     /// A description of the transaction (corresponds to "תיאור").
@@ -60,10 +64,36 @@ public class OshExpenseRecord
     [StringLength(500)]
     public string Note { get; set; } = string.Empty;
     
-    // Foreign key for ExpenseTypeClass
     public int? TypeClassId { get; set; }
     
-    // Navigation property with ForeignKey attribute
     [ForeignKey("TypeClassId")]
     public ExpenseTypeClass? TypeClass { get; set; }
+    
+    public Guid? OshReportId { get; set; }
+    
+    [ForeignKey("OshReportId")]
+    public OshExpenseReport? OshReport { get; set; }
+
+    public sealed class CsvMap : ClassMap<OshExpenseRecord>
+    {
+        public CsvMap()
+        {
+            Map(m => m.Date).Index(0).Convert(x =>
+            {
+                var value = x.Row.GetField(0) ?? string.Empty;
+                return string.IsNullOrEmpty(value) ? null : DateTime.Parse(value);
+            });
+            Map(m => m.ValueDate).Index(1).Convert(x =>
+            {
+                var value = x.Row.GetField(0) ?? string.Empty;
+                return string.IsNullOrEmpty(value) ? null : DateTime.Parse(value);
+            });
+            Map(m => m.Description).Index(2);
+            Map(m => m.Reference).Index(3);
+            Map(m => m.Debit).Index(4);
+            Map(m => m.Credit).Index(5);
+            Map(m => m.Balance).Index(6);
+            Map(m => m.Note).Index(7);
+        }
+    }
 }
