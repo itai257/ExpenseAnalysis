@@ -23,8 +23,8 @@ public class GetAllLeumiVisaCardExpenseRecordsQuery : IRequest<List<LeumiVisaCar
         {
             var query = _context.LeumiVisaCardExpenseRecords
                 .Include(r => r.TypeClass);
-
-            return await _mapper.ProjectTo<LeumiVisaCardExpenseRecordDto>(query).ToListAsync(cancellationToken: cancellationToken);
+            var res = await query.ToListAsync(cancellationToken: cancellationToken);
+            return _mapper.Map<List<LeumiVisaCardExpenseRecordDto>>(res);
         }
     }
 } 

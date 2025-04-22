@@ -26,6 +26,8 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<CalCardExpenseReport> CalCardExpenseReports { get; set; } = null!;
     
+    public DbSet<LeumiVisaCardExpenseReport> LeumiVisaCardExpenseReports { get; set; } = null!;
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

@@ -29,4 +29,10 @@ public class LeumiVisaCardExpensesController : ControllerBase
     {
         return await _mediator.Send(new AddLeumiVisaCardExpenseRecordCommand { Request = request });
     }
+
+    [HttpPost("Upload")]
+    public async Task UploadFile([FromForm] AddLeumiVisaExpenseFileRequest request)
+    {
+        await _mediator.Send(new AddLeumiVisaExpenseFileCommand { Request = request });
+    }
 } 
