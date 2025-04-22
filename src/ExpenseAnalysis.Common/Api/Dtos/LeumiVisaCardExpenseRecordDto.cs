@@ -12,9 +12,9 @@ public class LeumiVisaCardExpenseRecordDto
     [StringLength(255)]
     public string BusinessName { get; set; } = string.Empty;
     
-    public decimal? TransactionAmount { get; set; }
+    public string? TransactionAmount { get; set; }
     
-    public decimal? ChargeAmount { get; set; }
+    public string? ChargeAmount { get; set; }
     
     [StringLength(100)]
     public string TransactionType { get; set; } = string.Empty;

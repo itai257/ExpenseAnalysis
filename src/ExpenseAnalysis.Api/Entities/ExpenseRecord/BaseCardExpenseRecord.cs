@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ExpenseAnalysis.Api.Entities.ExpenseRecord;
 
 // Base class with common properties for an expense record.
-public abstract class BaseCardExpenseRecord
+public abstract class  BaseCardExpenseRecord
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,7 +16,7 @@ public abstract class BaseCardExpenseRecord
     /// For Osh, this is the primary transaction date.
     /// </summary>
     [Required]
-    public DateTime TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     /// <summary>
     /// Business or vendor name.

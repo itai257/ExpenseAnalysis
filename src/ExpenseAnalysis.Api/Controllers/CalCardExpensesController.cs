@@ -2,6 +2,7 @@ using ExpenseAnalysis.Api.Features.CalCardExpenses.Commands;
 using ExpenseAnalysis.Api.Features.CalCardExpenses.Queries;
 using ExpenseAnalysis.Api.Features.CalCardExpenses.Requests;
 using ExpenseAnalysis.Common.Api.Dtos;
+using ExpenseAnalysis.Common.Api.Requests;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 
@@ -29,4 +30,10 @@ public class CalCardExpensesController : ControllerBase
     {
         return await _mediator.Send(new AddCalCardExpenseRecordCommand { Request = request });
     }
-} 
+    
+    [HttpPost("Upload")]
+    public async Task UploadFile([FromForm] AddCalExpenseFileRequest request)
+    {
+        await _mediator.Send(new AddCalExpenseFileCommand { Request = request });
+    }
+}

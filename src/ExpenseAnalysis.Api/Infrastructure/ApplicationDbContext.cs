@@ -1,5 +1,6 @@
 using ExpenseAnalysis.Api.Entities;
 using ExpenseAnalysis.Api.Entities.ExpenseRecord;
+using ExpenseAnalysis.Api.Entities.Reports;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseAnalysis.Api.Infrastructure;
@@ -20,7 +21,10 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<OshExpenseRecord> OshExpenseRecords { get; set; } = null!;
     
+    // Reports
     public DbSet<OshExpenseReport> OshExpenseReports { get; set; } = null!;
+    
+    public DbSet<CalCardExpenseReport> CalCardExpenseReports { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

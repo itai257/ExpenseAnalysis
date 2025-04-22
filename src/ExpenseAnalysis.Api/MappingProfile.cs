@@ -26,10 +26,20 @@ public class MappingProfile : Profile
             methodInfo?.Invoke(instance, new object[] { this });
         }
         
-        ManuallyCreateMaps<CalCardExpenseRecord, CalCardExpenseRecordDto>();
+        //ManuallyCreateMaps<CalCardExpenseRecord, CalCardExpenseRecordDto>();
         ManuallyCreateMaps<ExpenseTypeClass, ExpenseTypeClassDto>();
-        ManuallyCreateMaps<LeumiVisaCardExpenseRecord, LeumiVisaCardExpenseRecordDto>();
+        
         ManuallyCreateMaps<OshExpenseRecord, OshExpenseRecordDto>();
+        
+        CreateMap<LeumiVisaCardExpenseRecord, LeumiVisaCardExpenseRecordDto>()
+            .ForMember(x => x.TransactionAmount, x => x.MapFrom(y => y.TransactionAmount == null? "" : y.TransactionAmount.ToString()))
+            .ForMember(x => x.ChargeAmount, x => x.MapFrom(y => y.ChargeAmount == null? "" : y.ChargeAmount.ToString()))
+            .ReverseMap();
+        
+        CreateMap<CalCardExpenseRecord, CalCardExpenseRecordDto>()
+            .ForMember(x => x.TransactionAmount, x => x.MapFrom(y => y.TransactionAmount == null? "" : y.TransactionAmount.ToString()))
+            .ForMember(x => x.ChargeAmount, x => x.MapFrom(y => y.ChargeAmount == null? "" : y.ChargeAmount.ToString()))
+            .ReverseMap();
     }
 
     private void ManuallyCreateMaps<FromT,ToT>()

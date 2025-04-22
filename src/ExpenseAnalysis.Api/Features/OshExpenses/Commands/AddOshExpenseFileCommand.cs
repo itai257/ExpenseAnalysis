@@ -2,6 +2,7 @@ using System.Globalization;
 using CsvHelper;
 using ExpenseAnalysis.Api.Entities;
 using ExpenseAnalysis.Api.Entities.ExpenseRecord;
+using ExpenseAnalysis.Api.Entities.Reports;
 using ExpenseAnalysis.Api.Infrastructure;
 using ExpenseAnalysis.Common.Api.Requests;
 using MediatR;

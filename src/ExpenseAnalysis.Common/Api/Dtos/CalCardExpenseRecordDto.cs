@@ -8,9 +8,9 @@ public class CalCardExpenseRecordDto
     
     public string BusinessName { get; set; } = string.Empty;
     
-    public decimal? TransactionAmount { get; set; }
+    public string? TransactionAmount { get; set; }
     
-    public decimal? ChargeAmount { get; set; }
+    public string? ChargeAmount { get; set; }
     
     public string TransactionType { get; set; } = string.Empty;
     

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ExpenseAnalysis.Api.Entities.ExpenseRecord;
 
-namespace ExpenseAnalysis.Api.Entities;
+namespace ExpenseAnalysis.Api.Entities.Reports;
 
 public class OshExpenseReport
 {

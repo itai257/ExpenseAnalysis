@@ -23,8 +23,8 @@ public class GetAllCalCardExpenseRecordsQuery : IRequest<List<CalCardExpenseReco
         {
             var query = _context.CalCardExpenseRecords
                 .Include(r => r.TypeClass);
-
-            return await _mapper.ProjectTo<CalCardExpenseRecordDto>(query).ToListAsync(cancellationToken: cancellationToken);
+            var res = await query.ToListAsync(cancellationToken: cancellationToken);
+            return _mapper.Map<List<CalCardExpenseRecordDto>>(res);
         }
     }
 } 

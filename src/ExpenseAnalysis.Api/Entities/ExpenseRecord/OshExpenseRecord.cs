@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper;
 using CsvHelper.Configuration;
+using ExpenseAnalysis.Api.Entities.Reports;
 
 namespace ExpenseAnalysis.Api.Entities.ExpenseRecord;
 
