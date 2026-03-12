@@ -1,5 +1,6 @@
 using ExpenseAnalysis.Api.Entities;
 using ExpenseAnalysis.Api.Entities.ExpenseRecord;
+using ExpenseAnalysis.Api.Entities.Monthly;
 using ExpenseAnalysis.Api.Entities.Reports;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<CalCardExpenseReport> CalCardExpenseReports { get; set; } = null!;
     
     public DbSet<LeumiVisaCardExpenseReport> LeumiVisaCardExpenseReports { get; set; } = null!;
+    
+    public DbSet<MonthlyReport> MonthlyReports { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

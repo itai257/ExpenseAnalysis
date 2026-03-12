@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ExpenseAnalysis.Api.Entities.ExpenseRecord;
+using ExpenseAnalysis.Api.Entities.Monthly;
 
 namespace ExpenseAnalysis.Api.Entities.Reports;
 
@@ -19,4 +20,9 @@ public class LeumiVisaCardExpenseReport
     public string ReportFilePath { get; set; } = string.Empty;
     
     public virtual ICollection<LeumiVisaCardExpenseRecord> Records { get; set; } = new List<LeumiVisaCardExpenseRecord>();
+
+    public Guid? MonthlyReportId { get; set; }
+
+    [ForeignKey(nameof(MonthlyReportId))]
+    public virtual MonthlyReport? MonthlyReport { get; set; }
 } 

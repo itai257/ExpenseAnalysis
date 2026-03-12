@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using ExpenseAnalysis.Api.Infrastructure;
 using ExpenseAnalysis.Common.Api.Dtos;
@@ -8,6 +9,9 @@ namespace ExpenseAnalysis.Api.Features.CalCardExpenses.Queries;
 
 public class GetAllCalCardExpenseRecordsQuery : IRequest<List<CalCardExpenseRecordDto>>
 {
+    [Required]
+    public Guid MonthlyReportId { get; set; }
+
     public class GetAllCalCardExpenseRecordsQueryHandler : IRequestHandler<GetAllCalCardExpenseRecordsQuery, List<CalCardExpenseRecordDto>>
     {
         private readonly ApplicationDbContext _context;
@@ -21,8 +25,11 @@ public class GetAllCalCardExpenseRecordsQuery : IRequest<List<CalCardExpenseReco
 
         public async Task<List<CalCardExpenseRecordDto>> Handle(GetAllCalCardExpenseRecordsQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.CalCardExpenseRecords
+            var query = _context.CalCardExpenseReports.AsNoTracking()
+                .Where(x => x.MonthlyReportId == request.MonthlyReportId)
+                .SelectMany(x => x.Records)
                 .Include(r => r.TypeClass);
+            
             var res = await query.ToListAsync(cancellationToken: cancellationToken);
             return _mapper.Map<List<CalCardExpenseRecordDto>>(res);
         }
